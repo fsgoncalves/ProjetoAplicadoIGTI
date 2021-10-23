@@ -1,0 +1,56 @@
+#Criação da Dimensão
+CREATE TABLE [dbo].[ESTADOS](
+	[UF] [varchar](2) NULL,
+	[Estado] [varchar](20) NULL,
+	[Regiao] [varchar](20) NULL,
+	[Municipio] [varchar](41) NULL
+)
+
+#Inserindo Dados na Dimensão
+
+SELECT DISTINCT uf,
+                CASE
+                  WHEN uf = 'AC' THEN 'Acre'
+                  WHEN uf = 'AL' THEN 'Alagoas'
+                  WHEN uf = 'AP' THEN 'Amapá'
+                  WHEN uf = 'AM' THEN 'Amazonas'
+                  WHEN uf = 'BA' THEN 'Bahia'
+                  WHEN uf = 'CE' THEN 'Ceará'
+                  WHEN uf = 'ES' THEN 'Espírito Santo'
+                  WHEN uf = 'GO' THEN 'Goias'
+                  WHEN uf = 'MA' THEN 'Maranhão'
+                  WHEN uf = 'MT' THEN 'Mato Grosso'
+                  WHEN uf = 'MS' THEN 'Mato Grosso do Sul'
+                  WHEN uf = 'MG' THEN 'Minas Gerais'
+                  WHEN uf = 'PA' THEN 'Pará'
+                  WHEN uf = 'PB' THEN 'Paraíba'
+                  WHEN uf = 'PR' THEN 'Paraná'
+                  WHEN uf = 'PE' THEN 'Pernambuco'
+                  WHEN uf = 'PI' THEN 'Piauí'
+                  WHEN uf = 'RJ' THEN 'Rio de Janeiro'
+                  WHEN uf = 'RN' THEN 'Rio Grande do Norte'
+                  WHEN uf = 'RS' THEN 'Rio Grande do Sul'
+                  WHEN uf = 'RO' THEN 'Rondônia'
+                  WHEN uf = 'RR' THEN 'Roraima'
+                  WHEN uf = 'SC' THEN 'Santa Catarina'
+                  WHEN uf = 'SP' THEN 'São Paulo'
+                  WHEN uf = 'SE' THEN 'Sergipe'
+                  WHEN uf = 'TO' THEN 'Tocantins'
+                  WHEN uf = 'DF' THEN 'Distrito Federal'
+                END AS Estado,
+                CASE
+                  WHEN uf IN ( 'RS', 'SC', 'PR' ) THEN 'Região Sul'
+                  WHEN uf IN ( 'SP', 'RJ', 'MG', 'ES' ) THEN 'Região Sudeste'
+                  WHEN uf IN ( 'MT', 'MS', 'DF', 'GO' ) THEN
+                  'Região Centro-Oeste'
+                  WHEN uf IN ( 'MA', 'BA', 'PE', 'PI',
+                               'RN', 'CE', 'AL', 'PB', 'SE' ) THEN
+                  'Região Nordeste'
+                  ELSE 'Região Norte'
+                END AS Regiao,
+               Municipio
+FROM   dbo.bolsafamiliapagamento 
+
+# Carregando os dados no Power BI
+select uf, estado, regiao, CONCAT(Municipio,', ',UF) as Municipio
+from estados
