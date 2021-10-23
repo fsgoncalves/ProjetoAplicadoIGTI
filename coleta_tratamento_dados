@@ -1,0 +1,65 @@
+
+library(curl)
+library(readr)
+library(dplyr)
+
+# criando a URL para fazer o download do arquivo
+data = "202103" # parametro de data
+URPag = "http://www.portaltransparencia.gov.br/download-de-dados/bolsa-familia-pagamentos/"
+URIPag = paste(URPag,data,sep="")
+URSaq = "http://www.portaltransparencia.gov.br/download-de-dados/bolsa-familia-saques/"
+URISaq = paste(URSaq,data,sep="")
+
+# Criando o nome do arquivo zipado
+nome_arquivoPag = paste(data,"zip",sep = ".")
+nome_arquivoSaq = paste(data,"zip",sep = ".")
+
+# Criando variável com o endereço de destino do arquivo zip:
+pasta_arquivoPag = "D:/_PÓS DATA ANALYTICS/base_dados_pa/Pagamento/"
+pasta_arquivoSaq = "D:/_PÓS DATA ANALYTICS/base_dados_pa/Saque/"
+
+# Criando a variável para extrair o arquivo:
+destino_arquivoPag = paste(pasta_arquivoPag,nome_arquivoPag,sep = "")
+destino_arquivoSaq = paste(pasta_arquivoSaq,nome_arquivoSaq,sep = "")
+
+# pasta para descompactar o arquivo
+pasta_unzipPag = "D:\\_PÓS DATA ANALYTICS\\base_dados_pa\\Pagamento"
+pasta_unzipSaq = "D:\\_PÓS DATA ANALYTICS\\base_dados_pa\\Saque"
+
+
+# fazendo o download do arquivo de Pagamento
+curl_download(URIPag,paste0(pasta_arquivoPag,nome_arquivoPag))
+
+# fazendo o download do arquivo de Saque
+curl_download(URISaq,paste0(pasta_arquivoSaq,nome_arquivoSaq))
+
+
+# descompactando o arquivo Pagamento
+unzip(destino_arquivoPag,exdir = pasta_unzipPag)
+
+# descompactando o arquivo Saque
+unzip(destino_arquivoSaq,exdir = pasta_unzipSaq)
+
+# Armazenando os dados de pagamentos em uma variável
+dataPag = read.csv("D:\\_PÓS DATA ANALYTICS\\base_dados_pa\\Pagamento\\202101_BolsaFamilia_Pagamentos.csv",sep = ";",dec = ",")
+
+# Armazenando os dados de saque em uma variável
+dataSaq = read.csv("D:\\_PÓS DATA ANALYTICS\\base_dados_pa\\Saque\\202101_BolsaFamilia_Saques.csv", sep = ";", dec = ",")
+
+# manipulando o tipo de dado de uma coluna na variável de pagamento 
+dataPag$NIS.FAVORECIDO = as.character(dataPag$NIS.FAVORECIDO)
+
+# Selecionando as colunas necessárias para criar o arquivo que será carregado na base de dados de pagamento
+dataPag = dataPag %>% select(MÊS.REFERÊNCIA, MÊS.COMPETÊNCIA, UF, NOME.MUNICÍPIO, NIS.FAVORECIDO, VALOR.PARCELA)
+
+# criando o arquivo .csv de pagamento
+system.time(write.table(x = dataPag, file = "D:\\_PÓS DATA ANALYTICS\\base_dados_pa\\teste\\dadosPagto202101.csv",sep = ";",row.names = F,quote = FALSE))
+
+# manipulando o tipo de dado de uma coluna na variável de saque
+dataSaq$NIS.FAVORECIDO = as.character(dataSaq$NIS.FAVORECIDO)
+
+# Selecionando as colunas necessárias para criar o arquivo que será carregado na base de dados de saque
+dataSaq = dataSaq %>% select(MÊS.REFERÊNCIA, MÊS.COMPETÊNCIA, UF, NOME.MUNICÍPIO, NIS.FAVORECIDO, DATA.SAQUE, VALOR.PARCELA)
+
+# criando o arquivo .csv de saque
+system.time(write.table(x = dataSaq, file = "D:\\_PÓS DATA ANALYTICS\\base_dados_pa\\teste\\dadosSaque202101.csv",sep = ";",row.names = F,quote = FALSE))
