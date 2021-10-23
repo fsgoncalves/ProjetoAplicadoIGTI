@@ -1,0 +1,18 @@
+CREATE TABLE BolsaFamiliaPagamento(
+	AnoMesReferencia int NULL,
+	AnoMesCompetencia int NULL,
+	UF varchar(2) NULL,
+	Municipio varchar(100) NULL,
+	NisBeneficiario varchar(100) NULL,
+	ValorParcela numeric(10, 2) NULL
+)
+
+CREATE TABLE BolsaFamiliaSaque(
+	AnoMesReferencia int NULL,
+	AnoMesCompetencia int NULL,
+	UF varchar(2) NULL,
+	Municipio varchar(100) NULL,
+	NisBeneficiario varchar(100) NULL,
+	DataSaque varchar(20) null,
+	ValorParcela numeric(10, 2) NULL
+)
