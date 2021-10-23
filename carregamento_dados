@@ -1,0 +1,16 @@
+BULK INSERT BolsaFamiliaPagamento
+FROM 'D:\_PÓS DATA ANALYTICS\base_dados_pa\teste\dadosPagto202102.csv'
+WITH (FIRSTROW = 2,
+    FIELDTERMINATOR = ';',
+    ROWTERMINATOR='\n',
+    BATCHSIZE=250000,
+    MAXERRORS=2);
+	
+	
+BULK INSERT BolsaFamiliaSaque
+FROM 'D:\_PÓS DATA ANALYTICS\base_dados_pa\teste\dadosSaque202102.csv'
+WITH (FIRSTROW = 2,
+    FIELDTERMINATOR = ';',
+    ROWTERMINATOR='\n',
+    BATCHSIZE=250000,
+    MAXERRORS=2);
