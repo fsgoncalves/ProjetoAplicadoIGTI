@@ -1,0 +1,5 @@
+SELECT concat('01/',right(AnoMesReferencia,2),'/',LEFT(AnoMesReferencia,4)) as DataReferencia,
+	   concat('01/',right(AnoMesCompetencia,2),'/',LEFT(AnoMesCompetencia,4)) as DataCompetencia,
+	   CONCAT(Municipio,', ',UF) as Municipio,       
+	   NisBeneficiario, ValorParcela
+FROM BolsaFamiliaPagamento
